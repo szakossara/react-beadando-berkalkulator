@@ -94,8 +94,8 @@ const SalaryCalculator = () => {
 
   return (
     <div className='flex items-center justify-center mt-24'><div className="border-2 rounded-lg bg-secondary-content flex flex-col items-center justify-center max-w-fit">
-      <h1 className="text-2xl font-bold mb-4">Salary Calculator</h1>
-      <NumberInput label="Gross Salary" value={grossSalary} onC={setGrossSalary} calc={calculateNetSalary} />
+      <h1 className="text-2xl font-bold mb-4">Bérkalkulátor</h1>
+      <NumberInput label="Bruttó bér" value={grossSalary} onC={setGrossSalary} calc={calculateNetSalary} />
       <Slider value={+grossSalary} onChange={handleGrossSalaryChange} />
       <div className="grid grid-cols-4 gap-8 mt-5 pl-8 pr-8 pb-8 mx-8">
         <SalaryButton SalaryValue={grossSalary} setSalaryValue={handleGrossSalaryChange} changeAmount={0.99} text="-1%" />
@@ -103,30 +103,50 @@ const SalaryCalculator = () => {
         <SalaryButton SalaryValue={grossSalary} setSalaryValue={handleGrossSalaryChange} changeAmount={1.01} text="+1%" />
         <SalaryButton SalaryValue={grossSalary} setSalaryValue={handleGrossSalaryChange} changeAmount={1.05} text="+5%" />
       </div>
-      <Checkbox label="Under 25" onChange={handleUnder25Change} />
+      <Checkbox label="25 éven aluliak SZJA kedvezménye" onChange={handleUnder25Change} />
       {/* {isNewlyMarried && (
         <DateInput label="Marriage Date" value={marriageDate} onChange={handleMarriageDateChange} />
       )}*/}
-      <Checkbox label="Newly Married" onChange={handleNewlyMarriedChange} />
+      <Checkbox label="Első házasok kedvezménye" onChange={handleNewlyMarriedChange} />
       {isNewlyMarried && (
-        <button onClick={() => setModalOpen(true)}>Add Date</button>
+        <button className="btn btn-secondary btn-outline btn-sm" onClick={() => setModalOpen(true)}>Dátum hozzáadása</button>
       )}
       {selectedDate && isNewlyMarried &&(
         <p>{isWithinTwoYears(selectedDate) ? 'Jogosult' : 'Nem jogosult'}</p>
       )}
 
-      <Modal
+      <div>
+        <Modal
+        size="sm"
         isOpen={modalOpen}
         onRequestClose={() => setModalOpen(false)}
         contentLabel="Select a Date"
+        centered
+        style={{
+          content: {
+            width: '300px', // Adjust the width as needed
+            height: '220px', // Adjust the height as needed
+            margin: 'auto',
+            border: '1px solid #ccc',
+            background: '#fff',
+            borderRadius: '20px',
+            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+          },
+          overlay: {
+            backgroundColor: 'rgba(0, 0, 0, 0.5)'
+          }
+        }}
       >
-        <button onClick={() => setModalOpen(false)}>Close</button>
-        <p>Select a date:</p>
-        <input type="date" onChange={(e) => handleDateSubmit(e.target.value)} />
-      </Modal>
+        <div className='flex items-center justify-center'>
+          <div className='flex flex-col items-center justify-center max-w-fit'>
+          <div className='py-4'><p>Válasszon dátumot:</p></div>
+          <input className='input input-bordered input-secondary' type="date" onChange={(e) => handleDateSubmit(e.target.value)} />
+          <div className='py-4'><button className="btn btn-secondary btn-outline btn-sm" onClick={() => setModalOpen(false)}>Mégsem</button></div>
+        </div></div>
+      </Modal></div>
 
       <Checkbox label="Személyi adókedvezmény" onChange={setpersonalDiscount} />
-      <div className="mt-4">Net Salary: <NumericFormat value={calculateNetSalary().toFixed(0)} displayType={'text'} thousandSeparator={" "} suffix={' Ft'} /></div>
+      <div className="text-2xl font-bold mb-4 pt-8">Nettó bér: <NumericFormat value={calculateNetSalary().toFixed(0)} displayType={'text'} thousandSeparator={" "} suffix={' Ft'} /></div>
     </div></div>
   );
 };
